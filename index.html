@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>棚卸しチェック表</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="app-header">
+    <h1>棚卸しチェック表</h1>
+    <div class="month">
+      <label for="month">対象月</label>
+      <input type="month" id="month">
+    </div>
+    <div class="progress" id="progress"></div>
+  </header>
+
+  <main>
+    <section class="toolbar no-print">
+      <input type="search" id="search" placeholder="品名で検索">
+      <select id="filterLocation"><option value="">すべての保管場所</option></select>
+      <select id="filterCategory"><option value="">すべてのカテゴリ</option></select>
+      <span class="spacer"></span>
+      <button id="addItem" class="primary">＋ 品目を追加</button>
+    </section>
+
+    <table class="sheet">
+      <thead>
+        <tr>
+          <th class="col-check">確認</th>
+          <th>品名</th>
+          <th>カテゴリ</th>
+          <th>保管場所</th>
+          <th class="num">前月</th>
+          <th class="num">今月数量</th>
+          <th class="num">増減</th>
+          <th>メモ</th>
+          <th class="no-print"></th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p id="empty" class="empty" hidden>該当する品目がありません。</p>
+
+    <section class="toolbar bottom no-print">
+      <button id="exportCsv">CSV出力（対象月）</button>
+      <button id="print">印刷</button>
+      <span class="spacer"></span>
+      <button id="backup">バックアップ保存</button>
+      <label class="button">バックアップ復元<input type="file" id="restore" accept="application/json" hidden></label>
+    </section>
+  </main>
+
+  <dialog id="itemDialog">
+    <form method="dialog" id="itemForm">
+      <h2 id="dialogTitle">品目を追加</h2>
+      <label>品名 <input name="name" required></label>
+      <label>カテゴリ <input name="category" list="categoryList" placeholder="例: 消耗品 / 事務用品"></label>
+      <label>保管場所 <input name="location" list="locationList" placeholder="例: 倉庫A 棚2段目"></label>
+      <div class="row2">
+        <label>単位 <input name="unit" placeholder="例: 箱 / 個 / 袋"></label>
+        <label>最低在庫数 <input name="minQty" type="number" min="0" step="1" placeholder="未設定"></label>
+      </div>
+      <label>備考 <input name="note"></label>
+      <datalist id="categoryList"></datalist>
+      <datalist id="locationList"></datalist>
+      <div class="dialog-actions">
+        <button type="button" id="deleteItem" class="danger">削除</button>
+        <span class="spacer"></span>
+        <button value="cancel" formnovalidate>キャンセル</button>
+        <button value="save" class="primary">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="js/seed.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
