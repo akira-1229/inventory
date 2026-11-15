@@ -225,7 +225,9 @@
     $('#pickFolder').textContent = dirHandle ? 'フォルダを変更' : 'フォルダを登録';
   }
 
-  async function readFolder() {
+  // auto: 起動時の自動読み込み。外付けHDDの接続待ちのため、見つからなければ10秒おきに再試行する
+  const RETRY_LIMIT = 12;
+  async function readFolder(auto = false, attempt = 1) {
     if (!dirHandle) return;
     try {
       let perm = await dirHandle.queryPermission({ mode: 'read' });
@@ -240,13 +242,18 @@
       showMessage(`${r.count}件を読み込みました` +
         (r.added || r.removed ? `（追加 ${r.added}件・エクセルから削除 ${r.removed}件）` : '（品目の増減なし）'), 'ok');
     } catch (e) {
+      if (e.name === 'NotFoundError' && auto && attempt < RETRY_LIMIT) {
+        showMessage(`外付けハードディスクの接続を待っています…（${attempt}/${RETRY_LIMIT - 1}）`, 'warn');
+        setTimeout(() => readFolder(true, attempt + 1), 10000);
+        return;
+      }
       showMessage(e.name === 'NotFoundError' ? 'フォルダが見つかりません。外付けハードディスクが接続されているか確認してください。' : e.message, 'error');
     }
     renderSource();
     render();
   }
 
-  $('#reload').addEventListener('click', readFolder);
+  $('#reload').addEventListener('click', () => readFolder());
 
   $('#pickFolder').addEventListener('click', async () => {
     let handle;
@@ -519,7 +526,7 @@
     }
     const perm = await dirHandle.queryPermission({ mode: 'read' }).catch(() => 'denied');
     if (perm === 'granted') {
-      await readFolder();
+      await readFolder(true);
     } else {
       renderSource(true);
       showMessage(`「エクセルを読み込む（許可）」を押すと、フォルダ「${dirHandle.name}」の最新のエクセルを読み込みます。`, isStale() ? 'warn' : 'info');
