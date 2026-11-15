@@ -31,12 +31,16 @@ body {
 main { max-width: 1200px; margin: 0 auto; padding: 0 16px 32px; }
 
 .app-header {
+  position: relative;
   display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px;
   max-width: 1200px; margin: 0 auto; padding: 20px 16px 12px;
 }
 .app-header h1 { font-size: 1.4rem; margin: 0; }
 .month { display: flex; align-items: center; gap: 8px; }
 .progress { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.refresh { white-space: nowrap; }
+.refresh:disabled { opacity: .7; cursor: wait; }
+.refresh.attention { background: var(--low-text); border-color: var(--low-text); }
 .bar { display: inline-block; width: 120px; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
 .bar > span { display: block; height: 100%; background: var(--up); transition: width .2s; }
 
@@ -117,6 +121,7 @@ dialog { max-height: calc(100vh - 32px); }
 /* スマホ: 行をカード表示に */
 @media (max-width: 760px) {
   .progress { margin-left: 0; }
+  .refresh { position: absolute; top: 18px; right: 16px; }
   .sheet, .sheet tbody, .sheet tr, .sheet td { display: block; width: 100%; }
   .sheet { border: none; background: none; }
   .sheet thead { display: none; }

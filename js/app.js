@@ -219,8 +219,7 @@
     if (stale && s) lines.push(`<span class="warn">${WEEKDAY}曜日のエクセル確認がまだです</span>`);
     $('#sourceStatus').innerHTML = lines.join('<br>');
     $('#source').classList.toggle('stale', stale);
-    $('#reload').hidden = !dirHandle;
-    $('#reload').textContent = needsPermission ? 'エクセルを読み込む（許可）' : 'エクセルを再読み込み';
+    $('#reload').classList.toggle('attention', needsPermission || stale);
     $('#pickFolder').hidden = !supportsFolder;
     $('#pickFolder').textContent = dirHandle ? 'フォルダを変更' : 'フォルダを登録';
   }
@@ -233,7 +232,7 @@
       let perm = await dirHandle.queryPermission({ mode: 'read' });
       if (perm !== 'granted') perm = await dirHandle.requestPermission({ mode: 'read' });
       if (perm !== 'granted') {
-        showMessage('フォルダの読み取りが許可されませんでした。「エクセルを読み込む」を押して許可してください。', 'error');
+        showMessage('フォルダの読み取りが許可されませんでした。右上の「更新」を押して許可してください。', 'error');
         renderSource(true);
         return;
       }
@@ -253,7 +252,26 @@
     render();
   }
 
-  $('#reload').addEventListener('click', () => readFolder());
+  // 右上の「更新」: 登録済みフォルダから読み込み。未登録ならフォルダ登録（非対応ブラウザはファイル選択）
+  let loading = false;
+  $('#reload').addEventListener('click', async () => {
+    if (loading) return;
+    if (!dirHandle) {
+      (supportsFolder ? $('#pickFolder') : $('#pickFile')).click();
+      return;
+    }
+    loading = true;
+    const btn = $('#reload');
+    btn.disabled = true;
+    btn.textContent = '更新中…';
+    try {
+      await readFolder();
+    } finally {
+      loading = false;
+      btn.disabled = false;
+      btn.textContent = '⟳ 更新';
+    }
+  });
 
   $('#pickFolder').addEventListener('click', async () => {
     let handle;
@@ -529,7 +547,7 @@
       await readFolder(true);
     } else {
       renderSource(true);
-      showMessage(`「エクセルを読み込む（許可）」を押すと、フォルダ「${dirHandle.name}」の最新のエクセルを読み込みます。`, isStale() ? 'warn' : 'info');
+      showMessage(`右上の「更新」を押すと、フォルダ「${dirHandle.name}」の最新のエクセルを読み込みます。`, isStale() ? 'warn' : 'info');
     }
   })();
 })();
