@@ -53,7 +53,7 @@ button, .button { cursor: pointer; }
 button:hover, .button:hover { border-color: var(--accent); }
 .primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
 .danger { color: var(--down); }
-.link { border: none; background: none; color: var(--accent); padding: 4px; }
+.link { border: none; background: none; color: var(--accent); padding: 4px; white-space: nowrap; }
 .muted { color: var(--muted); }
 
 .sheet { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
@@ -65,7 +65,14 @@ button:hover, .button:hover { border-color: var(--accent); }
 .sheet tr.checked td { background: var(--checked); }
 .sheet tr.low td { background: var(--low); }
 .name { font-weight: 600; }
-.badge { font-size: .75rem; font-weight: 600; color: var(--low-text); border: 1px solid currentColor; border-radius: 10px; padding: 1px 6px; margin-left: 4px; white-space: nowrap; }
+.badge { display: inline-block; font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid currentColor; border-radius: 10px; padding: 0 6px; margin-left: 4px; white-space: nowrap; vertical-align: 1px; }
+.badge.warn { color: var(--low-text); }
+.badge.photo { color: var(--accent); }
+.name .name-link { font-weight: 600; font-size: inherit; padding: 0; text-align: left; color: var(--text); }
+.name .name-link:hover { color: var(--accent); text-decoration: underline; }
+.sub { font-size: .8rem; color: var(--muted); font-weight: normal; margin-top: 2px; }
+.loc { font-size: .9rem; max-width: 220px; }
+.sheet tr.dim td { opacity: .6; }
 
 .qty { display: inline-flex; align-items: center; gap: 4px; }
 .qty-input { width: 70px; text-align: right; }
@@ -76,13 +83,36 @@ button:hover, .button:hover { border-color: var(--accent); }
 .note-input { width: 100%; min-width: 120px; }
 .empty { text-align: center; color: var(--muted); padding: 24px; }
 
-dialog { border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); padding: 20px; width: min(440px, calc(100vw - 32px)); }
+dialog { border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); padding: 20px; width: min(520px, calc(100vw - 32px)); }
 dialog::backdrop { background: rgba(0,0,0,.4); }
 dialog h2 { margin: 0 0 12px; font-size: 1.1rem; }
 dialog label { display: block; margin-bottom: 10px; font-size: .9rem; }
 dialog label input { display: block; width: 100%; margin-top: 4px; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .dialog-actions { display: flex; gap: 8px; margin-top: 16px; }
+
+/* エクセル読み込み元 */
+.source { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--up); border-radius: 8px; padding: 10px 14px; margin-bottom: 4px; }
+.source.stale { border-left-color: var(--low-text); }
+.source-status { font-size: .9rem; line-height: 1.6; flex: 1; min-width: 240px; }
+.source-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.source-message { flex-basis: 100%; margin: 0; font-size: .9rem; }
+.source-message.ok { color: var(--up); }
+.source-message.error { color: var(--down); }
+.source-message.warn, .warn { color: var(--low-text); font-weight: 600; }
+.inline { display: inline-flex; align-items: center; gap: 6px; font-size: .9rem; }
+.inline input { width: 18px; height: 18px; margin: 0; }
+
+/* 詳細ダイアログ */
+.excel-fields { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0 0 12px; font-size: .9rem; }
+.excel-fields dt { color: var(--muted); }
+.excel-fields dd { margin: 0; white-space: pre-wrap; }
+.photos { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.photos img { width: 120px; height: 120px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border); display: block; }
+.hint { font-size: .8rem; color: var(--muted); margin: 0 0 12px; }
+dialog label.inline { display: flex; margin: 4px 0 0; }
+dialog label.inline input { display: inline; width: 18px; margin: 0; }
+dialog { max-height: calc(100vh - 32px); }
 
 /* スマホ: 行をカード表示に */
 @media (max-width: 760px) {
@@ -95,7 +125,8 @@ dialog label input { display: block; width: 100%; margin-top: 4px; }
   .sheet td::before { content: attr(data-label); color: var(--muted); font-size: .85rem; text-align: left; }
   .sheet td.col-check { position: absolute; top: 6px; right: 0; width: auto; }
   .sheet td.col-check::before, .sheet td.name::before { content: none; }
-  .sheet td.name { font-size: 1.05rem; padding-right: 56px; text-align: left; }
+  .sheet td.name { font-size: 1.05rem; padding-right: 56px; text-align: left; display: block; }
+  .loc { max-width: none; }
   .sheet td:empty { display: none; }
   .sheet td:last-child { justify-content: flex-end; }
   .note-input { max-width: 60%; }

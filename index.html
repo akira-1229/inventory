@@ -17,21 +17,27 @@
   </header>
 
   <main>
+    <section class="source no-print" id="source">
+      <div class="source-status" id="sourceStatus"></div>
+      <div class="source-actions">
+        <button id="reload" class="primary" hidden>エクセルを読み込む</button>
+        <button id="pickFolder">フォルダを登録</button>
+        <label class="button">ファイルを直接選択<input type="file" id="pickFile" accept=".xlsx" hidden></label>
+      </div>
+      <p class="source-message" id="sourceMessage" hidden></p>
+    </section>
+
     <section class="toolbar no-print">
-      <input type="search" id="search" placeholder="品名で検索">
-      <select id="filterLocation"><option value="">すべての保管場所</option></select>
-      <select id="filterCategory"><option value="">すべてのカテゴリ</option></select>
-      <span class="spacer"></span>
-      <button id="addItem" class="primary">＋ 品目を追加</button>
+      <input type="search" id="search" placeholder="名称・用途・場所で検索">
+      <label class="inline"><input type="checkbox" id="showExcluded"> 対象外も表示</label>
     </section>
 
     <table class="sheet">
       <thead>
         <tr>
           <th class="col-check">確認</th>
-          <th>品名</th>
-          <th>カテゴリ</th>
-          <th>保管場所</th>
+          <th>名称</th>
+          <th>場所</th>
           <th class="num">前月</th>
           <th class="num">今月数量</th>
           <th class="num">増減</th>
@@ -41,7 +47,7 @@
       </thead>
       <tbody id="rows"></tbody>
     </table>
-    <p id="empty" class="empty" hidden>該当する品目がありません。</p>
+    <p id="empty" class="empty" hidden></p>
 
     <section class="toolbar bottom no-print">
       <button id="exportCsv">CSV出力（対象月）</button>
@@ -54,19 +60,17 @@
 
   <dialog id="itemDialog">
     <form method="dialog" id="itemForm">
-      <h2 id="dialogTitle">品目を追加</h2>
-      <label>品名 <input name="name" required></label>
-      <label>カテゴリ <input name="category" list="categoryList" placeholder="例: 消耗品 / 事務用品"></label>
-      <label>保管場所 <input name="location" list="locationList" placeholder="例: 倉庫A 棚2段目"></label>
+      <h2 id="dialogTitle"></h2>
+      <dl class="excel-fields" id="excelFields"></dl>
+      <div class="photos" id="photos"></div>
+      <p class="hint">上の内容はエクセルから読み込んでいます。変更はエクセル側で行ってください。</p>
       <div class="row2">
         <label>単位 <input name="unit" placeholder="例: 箱 / 個 / 袋"></label>
         <label>最低在庫数 <input name="minQty" type="number" min="0" step="1" placeholder="未設定"></label>
       </div>
-      <label>備考 <input name="note"></label>
-      <datalist id="categoryList"></datalist>
-      <datalist id="locationList"></datalist>
+      <label class="inline"><input type="checkbox" name="excluded"> 棚卸しの対象外にする（設備など数えないもの）</label>
       <div class="dialog-actions">
-        <button type="button" id="deleteItem" class="danger">削除</button>
+        <button type="button" id="forgetItem" class="danger" hidden>この品目を削除</button>
         <span class="spacer"></span>
         <button value="cancel" formnovalidate>キャンセル</button>
         <button value="save" class="primary">保存</button>
@@ -74,7 +78,8 @@
     </form>
   </dialog>
 
-  <script src="js/seed.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/xlsx-reader.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
