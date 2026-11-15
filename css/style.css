@@ -31,7 +31,6 @@ body {
 main { max-width: 1200px; margin: 0 auto; padding: 0 16px 32px; }
 
 .app-header {
-  position: relative;
   display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px;
   max-width: 1200px; margin: 0 auto; padding: 20px 16px 12px;
 }
@@ -130,10 +129,23 @@ dialog label.inline { display: flex; margin: 4px 0 0; }
 dialog label.inline input { display: inline; width: 18px; margin: 0; }
 dialog { max-height: calc(100vh - 32px); }
 
+/* 狭い画面のヘッダー: 1行目にタイトル＋更新ボタン、2行目に対象月と進捗 */
+@media (max-width: 1000px) {
+  .app-header h1 { order: 1; flex: 1 1 auto; min-width: 0; }
+  .refresh { order: 2; }
+  .header-break { order: 3; flex-basis: 100%; height: 0; }
+  .month { order: 4; }
+  .progress { order: 5; margin-left: 0; }
+}
+
+@media (max-width: 360px) {
+  .app-header { column-gap: 12px; }
+  .app-header h1 { font-size: 1.2rem; }
+  .refresh { padding: 6px 12px; }
+}
+
 /* スマホ: 行をカード表示に */
 @media (max-width: 760px) {
-  .progress { margin-left: 0; }
-  .refresh { position: absolute; top: 18px; right: 16px; }
   .sheet, .sheet tbody, .sheet tr, .sheet td { display: block; width: 100%; }
   .sheet { border: none; background: none; }
   .sheet thead { display: none; }
