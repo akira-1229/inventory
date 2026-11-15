@@ -263,13 +263,15 @@
     loading = true;
     const btn = $('#reload');
     btn.disabled = true;
-    btn.textContent = '更新中…';
+    btn.querySelector('.refresh-label').textContent = '更新中…';
+    btn.classList.add('spinning');
     try {
       await readFolder();
     } finally {
       loading = false;
       btn.disabled = false;
-      btn.textContent = '⟳ 更新';
+      btn.querySelector('.refresh-label').textContent = '更新';
+      btn.classList.remove('spinning');
     }
   });
 

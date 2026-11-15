@@ -38,9 +38,21 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 16px 32px; }
 .app-header h1 { font-size: 1.4rem; margin: 0; }
 .month { display: flex; align-items: center; gap: 8px; }
 .progress { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-.refresh { white-space: nowrap; }
-.refresh:disabled { opacity: .7; cursor: wait; }
-.refresh.attention { background: var(--low-text); border-color: var(--low-text); }
+/* 右上の更新ボタン */
+.refresh {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 16px;
+  background: #1e2321; color: #7cc7b1;
+  border: 2px solid #353c39; border-radius: 12px;
+  font-weight: 600; font-size: 1rem; letter-spacing: .05em; white-space: nowrap;
+}
+.refresh:hover { border-color: #7cc7b1; }
+.refresh:disabled { cursor: wait; }
+.refresh-icon { width: 1.05em; height: 1.05em; flex: none; }
+.refresh.spinning .refresh-icon { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+/* 許可切れ・火曜未確認のときは枠をオレンジに */
+.refresh.attention { border-color: #e0a04a; }
 .bar { display: inline-block; width: 120px; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
 .bar > span { display: block; height: 100%; background: var(--up); transition: width .2s; }
 
